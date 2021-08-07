@@ -1,0 +1,5 @@
+{
+  "exec": "babel-node src/server.js",
+  "ext":"js,pug,json",
+  "ignore": ["src/public/*"]
+}
