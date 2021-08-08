@@ -15,14 +15,17 @@ app.get("/", (_, res) => res.render("home"));
 const server = http.createServer(app);
 const wss = new WebSocket.Server({server});
 
+const sockets = [];
+
 wss.on("connection", (socket) => {
+  sockets.push(socket);
   console.log("connected to browser");
   socket.on("message", (message) => {
-    console.log(message.toString("utf-8"))
+    sockets.forEach((socket) => {
+      socket.send(message.toString("utf-8"));
+    });
   });
   socket.on("close", () => console.log("disconnected from browser"));
-
-  socket.send("hello");
 });
 
 server.listen(port, handleListener);
