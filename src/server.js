@@ -19,11 +19,19 @@ const sockets = [];
 
 wss.on("connection", (socket) => {
   sockets.push(socket);
+  socket["name"] = "Undefined";
   console.log("connected to browser");
-  socket.on("message", (message) => {
-    sockets.forEach((socket) => {
-      socket.send(message.toString("utf-8"));
-    });
+  socket.on("message", (msg) => {
+    const message = JSON.parse(msg);
+
+    switch (message.type) {
+      case "message":
+        sockets.forEach((es) => {
+          es.send(`${socket.name} : ${message.payload}`);
+        });
+      case "name":
+        socket["name"] = message.payload;
+    }
   });
   socket.on("close", () => console.log("disconnected from browser"));
 });
