@@ -147,12 +147,8 @@ async function handleMicChange() {
       .find((sender) => sender.track.kind === "audio");
     audioSender.replaceTrack(audioTrack);
   }
-  if (!isMicOff) {
-    micBtn.innerText = "Mic on";
-  } else {
-    micBtn.innerText = "Mic off";
-  }
-  isMicOff = !isMicOff;
+  micBtn.innerText = "Mic off";
+  isMicOff = false;
 }
 async function handleCamChange() {
   await getMedia(micSelect.value, camSelect.value);
@@ -163,12 +159,8 @@ async function handleCamChange() {
       .find((sender) => sender.track.kind === "video");
     videoSender.replaceTrack(videoTrack);
   }
-  if (!isCamOff) {
-    camBtn.innerText = "Cam on";
-  } else {
-    camBtn.innerText = "Cam off";
-  }
-  isCamOff = !isCamOff;
+  camBtn.innerText = "Cam off";
+  isCamOff = false;
 }
 
 function handleIce(data) {
