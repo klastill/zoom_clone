@@ -87,7 +87,18 @@ async function makeCall() {
 }
 
 function makeConnection() { 
-  myPeerConnection = new RTCPeerConnection();
+  myPeerConnection = new RTCPeerConnection({
+    iceServers: [
+      {
+        urls: [
+          "stun:stun.l.google.com:19302",
+          "stun:stun1.l.google.com:19302",
+          "stun:stun2.l.google.com:19302",
+          "stun:stun3.l.google.com:19302",
+        ],
+      },
+    ],
+  });
   myPeerConnection.addEventListener("icecandidate", handleIce);
   myPeerConnection.addEventListener("addstream", handleAddStream);
   myStream.getTracks().forEach((track) => {
@@ -127,8 +138,37 @@ function handleCamBtn() {
   isCamOff = !isCamOff;
 }
 
-async function handleInputChange() {
+async function handleMicChange() {
   await getMedia(micSelect.value, camSelect.value);
+  if (myPeerConnection) {
+    const audioTrack = myStream.getAudioTracks()[0];
+    const audioSender = myPeerConnection
+      .getSenders()
+      .find((sender) => sender.track.kind === "audio");
+    audioSender.replaceTrack(audioTrack);
+  }
+  if (!isMicOff) {
+    micBtn.innerText = "Mic on";
+  } else {
+    micBtn.innerText = "Mic off";
+  }
+  isMicOff = !isMicOff;
+}
+async function handleCamChange() {
+  await getMedia(micSelect.value, camSelect.value);
+  if (myPeerConnection) {
+    const videoTrack = myStream.getVideoTracks()[0];
+    const videoSender = myPeerConnection
+      .getSenders()
+      .find((sender) => sender.track.kind === "video");
+    videoSender.replaceTrack(videoTrack);
+  }
+  if (!isCamOff) {
+    camBtn.innerText = "Cam on";
+  } else {
+    camBtn.innerText = "Cam off";
+  }
+  isCamOff = !isCamOff;
 }
 
 function handleIce(data) {
@@ -163,5 +203,5 @@ socket.on("ice", (ice) => {
 roomForm.addEventListener("submit", handleRoomSubmit);
 micBtn.addEventListener("click", handleMicBtn);
 camBtn.addEventListener("click", handleCamBtn);
-micSelect.addEventListener("input", handleInputChange);
-camSelect.addEventListener("input", handleInputChange);
+micSelect.addEventListener("input", handleMicChange);
+camSelect.addEventListener("input", handleCamChange);
