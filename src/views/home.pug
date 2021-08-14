@@ -6,6 +6,8 @@ html(lang="en")
     meta(name="viewport", content="width=device-width, initial-scale=1.0")
     title CLOOM
     link(rel="stylesheet", href="https://unpkg.com/mvp.css")
+    link(rel="stylesheet", type="text/css", href="/public/css/style.css")
+    style 
   body
     header
       h1 CLOOM
@@ -16,12 +18,16 @@ html(lang="en")
           button Enter Room
       #call
         #myStream
-          video#myVideo(autoplay, playsinline, width="400", height="300")
-          button#mic Mic off
-          select#mics
-          button#camera cam off
-          select#cameras
-          video#opVideo(autoplay, playsinline, width="400", height="300")
+          #face
+            video#myVideo(autoplay, playsinline, width="400", height="300")
+            video#opVideo(autoplay, playsinline, width="400", height="300")
+          div
+            button#mic Mic off
+            button#camera cam off
+          div
+            select#mics 
+            select#cameras
+          
 
     script(src="/socket.io/socket.io.js") 
     script(src="/public/js/app.js") 
